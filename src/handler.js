@@ -55,12 +55,8 @@ const handler = {
 		if (Object.getOwnPropertyNames(req.query).length === 0) {
 			res.json({
 				status: "success",
-				data: { books: 
-					bookShelf.forEach(b => new Object({
-						id: b.id, 
-						name: b.name, 
-						publisher: b.publisher
-					}))
+				data: { 
+					books: bookShelf.filter((val, idx) => idx === 0)
 				}
 			})
 		} else {
@@ -70,28 +66,45 @@ const handler = {
 					val2 = parseInt(val) === 1 ? true : false
 				switch (key) {
 					case "reading": 
-						const readBooks = bookShelf.filter(b => b.reading === val2)
+						let readBooks = []
+						bookShelf.filter(b => b.reading === val2).map((c, d) => {
+							readBooks.push({
+								name: c.name, publisher: c.publisher
+							})
+						})
 						res.json({
 							status: "success",
-							data: { books : readBooks }
+							data: {
+								books: readBooks
+							}
 						})
 						break
 					case "finished": 
-						const finishedBooks = bookShelf.filter(b => b.finished === val2)
-						finishedBooks
+						const finishedBooks = []
+						bookShelf.filter(b => b.finished === val2).map(c => {
+							finishedBooks.push({
+								name: c.name, publisher: c.publisher
+							})
+						})
 						res.json({
 							status: "success",
-							data: { 
-								name: finishedBooks.name, 
-								publisher: finishedBooks.publisher
+							data: {
+								books: finishedBooks
 							}
 						})
 						break
 					case "name": 
-						const namedBooks = bookShelf.filter(b => b.name === val2)
+						const namedBooks = []
+						bookShelf.filter(b => b.name === val2).map(c => {
+							namedBooks.push({
+								name: c.name, publisher: c.publisher
+							})
+						})
 						res.json({
 							status: "success",
-							data: { books: namedBooks }
+							data: {
+								books: namedBooks
+							}
 						})
 						break
 				}
@@ -177,26 +190,6 @@ const handler = {
 			})
 		}
 		res.end()
-	},
-	getAllReadingBooks: (req, res) => {
-		const { reading } = req.query
-		const state = reading == 1 ? true : false
-		const readBooks = bookShelf.filter(book => book.reading === state)
-		res.status(200)
-		res.json({
-			status: "success",
-			data: { books: readBooks }
-		})
-		console.log(reading)
-		res.end()
-	},
-	getAllFinishedBooks: (req, res) => {
-		const finished = req.query.finished
-		console.log(finished)
-	},
-	getAllBooksByName: (req, res) => {
-		const { name } = req.query
-		console.log(name)
 	}
 }
 
